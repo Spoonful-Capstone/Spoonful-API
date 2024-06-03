@@ -1,6 +1,6 @@
 const { prisma } = require("../prisma")
 const bcrypt = require('bcrypt')
-const { generateAccessToken } = require("../utils/JWTUtils")
+const { generateAccessToken, generateRefreshToken } = require("../utils/JWTUtils")
 
 async function loginUserHandler(req, res) {
     const { email, password } = req.body
@@ -38,6 +38,18 @@ async function loginUserHandler(req, res) {
     }
 
     const token = generateAccessToken(user.ID, user.email)
+    const refresh_token = generateRefreshToken(user.ID, user.email)
+
+    await prisma.refresh_session.create({
+        data: {
+            user: {
+                connect: {
+                    ID: user.ID
+                }
+            },
+            token: refresh_token
+        }
+    })
 
     const userData = {
         email: user.email,
@@ -47,6 +59,7 @@ async function loginUserHandler(req, res) {
     }
 
     res.status(200)
+    res.cookie('refresh_token', refresh_token)
     return res.json({
         status: 'Success',
         data: {
@@ -56,4 +69,12 @@ async function loginUserHandler(req, res) {
     })
 }
 
-module.exports = { loginUserHandler }
+async function logoutUserHandler(req, res) {
+    res.clearCookie('coba')
+    return res.json({
+        status: 'Success',
+        message: 'Logout successful'
+    })
+}
+
+module.exports = { loginUserHandler, logoutUserHandler }

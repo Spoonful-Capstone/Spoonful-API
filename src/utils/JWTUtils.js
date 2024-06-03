@@ -9,8 +9,18 @@ function generateAccessToken(userId, email) {
         email
     },
         process.env.ACCESS_TOKEN,
+        { expiresIn: '30s' }
+    )
+}
+
+function generateRefreshToken(userId, email) {
+    return jwt.sign({
+        userId,
+        email
+    },
+        process.env.REFRESH_ACCESS_TOKEN,
         { expiresIn: '10m' }
     )
 }
 
-module.exports = { generateAccessToken }
+module.exports = { generateAccessToken, generateRefreshToken }
