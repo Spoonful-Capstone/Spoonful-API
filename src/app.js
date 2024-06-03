@@ -1,10 +1,15 @@
 const express = require('express')
+const { loginUserHandler } = require('./handlers/AuthHandler')
 
 const app = express()
+
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.json({ "data": "hello world" })
 })
+
+app.post('/login', loginUserHandler)
 
 const PORT = 3000
 
