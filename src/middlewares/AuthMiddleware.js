@@ -7,7 +7,7 @@ function userMustAuthMiddleware(req, res, next) {
     const token = req.headers.authorization.split(' ')[1]
 
     try {
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN)
+        jwt.verify(token, process.env.ACCESS_TOKEN)
         return next()
     } catch (err) {
         res.json({
