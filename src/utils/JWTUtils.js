@@ -9,7 +9,7 @@ function generateAccessToken(userId, email) {
         email
     },
         process.env.ACCESS_TOKEN,
-        { expiresIn: '10m' }
+        { expiresIn: '10s' }
     )
 }
 
