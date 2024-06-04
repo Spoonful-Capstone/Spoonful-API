@@ -37,19 +37,28 @@ async function loginUserHandler(req, res) {
         })
     }
 
-    const token = generateAccessToken(user.ID, user.email)
-    const refresh_token = generateRefreshToken(user.ID, user.email)
+    // const rf_token = await prisma.refresh_session.upsert({
+    //     update: {
+    //         user: {
+    //             connect: {
+    //                 ID: user.ID
+    //             }
+    //         }
+    //     },
+    //     create: {
+    //         user: {
+    //             connect: {
+    //                 ID: user.ID
+    //             }
+    //         }
+    //     },
+    //     where: {
+    //         userId: user.ID
+    //     }
+    // })
 
-    await prisma.refresh_session.create({
-        data: {
-            user: {
-                connect: {
-                    ID: user.ID
-                }
-            },
-            token: refresh_token
-        }
-    })
+    const token = generateAccessToken(user.ID, user.email)
+    // const refresh_token = generateRefreshToken(rf_token.ID)
 
     const userData = {
         email: user.email,
@@ -59,7 +68,8 @@ async function loginUserHandler(req, res) {
     }
 
     res.status(200)
-    res.cookie('refresh_token', refresh_token)
+    res.cookie('access_token', token, { maxAge: 30000 })
+    // res.cookie('refresh_token', refresh_token, { maxAge: 600000 })
     return res.json({
         status: 'Success',
         data: {
@@ -70,7 +80,14 @@ async function loginUserHandler(req, res) {
 }
 
 async function logoutUserHandler(req, res) {
-    res.clearCookie('coba')
+    // await prisma.refresh_session.delete({
+    //     where: {
+    //         user: {
+    //             ID: req.user.ID
+    //         }
+    //     }
+    // })
+    res.clearCookie('access_token')
     return res.json({
         status: 'Success',
         message: 'Logout successful'

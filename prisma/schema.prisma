@@ -10,7 +10,6 @@ datasource db {
 model refresh_session {
   ID     String @id @default(uuid())
   userId String @unique(map: "Refresh_Session_userId_key")
-  token  String @db.MediumText
   user   user   @relation(fields: [userId], references: [ID], map: "Refresh_Session_userId_fkey")
 }
 

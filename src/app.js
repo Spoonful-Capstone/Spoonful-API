@@ -1,17 +1,15 @@
 const express = require('express')
-const { loginUserHandler } = require('./handlers/AuthHandler')
-const { userMustAuthMiddleware } = require('./middlewares/AuthMiddleware')
+const { requireAuth, revokeAuth } = require('./middlewares/AuthMiddleware')
 
 const app = express()
-const router = express.Router({ mergeParams: true })
 const userRouter = require('./routes/UserRouter')
 const cookieParser = require('cookie-parser')
 
 app.use(express.json())
 app.use(cookieParser())
 
-app.get('/', userMustAuthMiddleware, (req, res) => {
-    let cookie = req.cookies.coba ?? 'tidak ada isinya'
+app.get('/', requireAuth, revokeAuth, (req, res) => {
+    let cookie = req.cookies.access_token ?? 'tidak ada isinya'
     res.json({ "data": cookie })
 })
 

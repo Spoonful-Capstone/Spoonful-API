@@ -1,9 +1,10 @@
 const dotenv = require('dotenv')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { generateAccessToken } = require('../utils/JWTUtils');
 
 dotenv.config()
 
-function userMustAuthMiddleware(req, res, next) {
+function requireAuth(req, res, next) {
     if (!req.headers.authorization) {
         return res.status(401).json({
             status: 'Failed',
@@ -18,8 +19,10 @@ function userMustAuthMiddleware(req, res, next) {
             message: 'User is not authenticated'
         })
     }
+
     try {
-        jwt.verify(token, process.env.ACCESS_TOKEN)
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN)
+        req.decoded = decoded
         return next()
     } catch (err) {
         res.status(401)
@@ -30,5 +33,12 @@ function userMustAuthMiddleware(req, res, next) {
     }
 }
 
+function revokeAuth(req, res, next) {
+    const decoded = req.decoded
+    const newToken = generateAccessToken(decoded.userId, decoded.email)
+    res.cookie('access_token', newToken)
+    return next()
+}
 
-module.exports = { userMustAuthMiddleware }
+
+module.exports = { requireAuth, revokeAuth }
