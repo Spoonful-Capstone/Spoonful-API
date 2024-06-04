@@ -20,7 +20,37 @@ model user {
   password        String
   weight          Float
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime @updatedAt
   age             Int              @default(17)
   refresh_session refresh_session?
 }
+
+model food {
+  ID String @id @default(uuid())
+  name String 
+  calories Float @default(0)
+  carbohidrate Float @default(0)
+  protein Float @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// model nutrition{
+//   ID String @id @default(uuid())
+//   name String 
+//   foods food_nutrition[]
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model food_nutrition{
+//   food food @relation(fields: [foodId], references: [ID])
+//   foodId String
+//   nutrition nutrition @relation(fields: [nutritionId], references: [ID])
+//   nutritionId String
+//   amount Float
+
+//   @@id([foodId, nutritionId])
+// }
+
+
