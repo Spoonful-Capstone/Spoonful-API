@@ -21,7 +21,7 @@ model User{
   weight Float 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  session Refresh_Session?
+  session Refresh_Session? 
 }
 
 model Refresh_Session{
