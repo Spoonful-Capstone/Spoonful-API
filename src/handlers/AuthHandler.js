@@ -1,6 +1,6 @@
 const { prisma } = require("../prisma")
 const bcrypt = require('bcrypt')
-const { generateAccessToken, generateRefreshToken } = require("../utils/JWTUtils")
+const { generateAccessToken } = require("../utils/JWTUtils")
 
 async function loginUserHandler(req, res) {
     const { email, password } = req.body
