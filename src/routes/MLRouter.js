@@ -1,8 +1,9 @@
 const express = require('express')
 const { recommendPlaceHandler } = require('../handlers/MLHandler')
+const expressAsyncHandler = require('express-async-handler')
 
-const router = express.Router()
+router = express.Router()
 
-router.post('/recommend/place', recommendPlaceHandler)
+router.post('/recommend/place', (recommendPlaceHandler))
 
 module.exports = router

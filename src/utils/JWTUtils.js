@@ -8,7 +8,7 @@ function generateAccessToken(userId, email) {
         userId,
         email
     },
-        process.env.ACCESS_TOKEN,
+        process.env.ACCESS_TOKEN_KEY,
         { expiresIn: '30s' }
     )
 }

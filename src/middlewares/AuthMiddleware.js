@@ -21,7 +21,7 @@ function requireAuth(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN)
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_KEY)
         req.decoded = decoded
         return next()
     } catch (err) {

@@ -1,16 +1,51 @@
-const { findNearbyFoodByName } = require('../utils/PlaceUtils')
+const { findNearbyFoodByName, getPlacesPhoto } = require('../utils/PlaceUtils')
 
 async function recommendPlaceHandler(req, res) {
-    const { longitude, latitude } = req.body
+    const { longitude, latitude, foodName } = req.body
 
-    const data = await findNearbyFoodByName({
-        latitude: -7.301394,
-        longitude: 112.740243,
-        foodName: 'ayam geprek'
-    })
+    try {
+        const data = await findNearbyFoodByName({
+            latitude,
+            longitude,
+            foodName
+        })
+
+
+        const placesData = await Promise.all(data.map(async (place) => {
+            const photoData = place.photos && place.photos.length > 0 ? await getPlacesPhoto(place.photos[0].name) : 'Tidak ada isinya';
+            return {
+                name: place.name,
+                address: place.formattedAddress,
+                maps_url: place.googleMapsUri,
+                photos: photoData[0].photoUri
+            };
+        }));
+    } catch (error) {
+        res.status(404)
+        return res.json({
+            status: 'Failed',
+            message: 'Restaurant not found'
+        })
+    }
+
+    // data.forEach(async (place) => {
+    //     // const distance = 
+    //     const photoData = place.photos.length > 0 ? await getPlacesPhoto(place.photos[0].name) : 'Tidak ada isinya'
+    //     const placeData = {
+    //         name: place.displayName.text,
+    //         address: place.formattedAddress,
+    //         maps_url: place.googleMapsUri,
+    //         photos: photoData[0].photoUri,
+    //     }
+    //     places.push(placeData)
+    // })
+
+    console.log(placesData);
 
     return res.json({
-        data
+        status: 'Success',
+        message: 'Get recommendation restaurant successful',
+        data: placesData
     })
 }
 
