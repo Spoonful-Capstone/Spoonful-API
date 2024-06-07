@@ -3,7 +3,7 @@ const { registerUserHandler, editUserHandler } = require('../handlers/userHandle
 
 router = express.Router()
 
-router.post('/addUser', registerUserHandler)
-router.put('/user/:id', editUserHandler)
+router.post('/user', registerUserHandler)
+router.put('/user/:userId', editUserHandler)
 
 module.exports = router
