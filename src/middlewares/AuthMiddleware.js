@@ -22,9 +22,13 @@ function requireAuth(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_KEY)
-        req.decoded = decoded
+        req.user = {
+            id: decoded.userId,
+            email: decoded.email
+        }
         return next()
     } catch (err) {
+        res.clearCookies('access_token')
         res.status(401)
         return res.json({
             status: 'Failed',
@@ -34,8 +38,8 @@ function requireAuth(req, res, next) {
 }
 
 function revokeAuth(req, res, next) {
-    const decoded = req.decoded
-    const newToken = generateAccessToken(decoded.userId, decoded.email)
+    const decoded = req.user
+    const newToken = generateAccessToken(decoded.id, decoded.email)
     res.cookie('access_token', newToken)
     return next()
 }

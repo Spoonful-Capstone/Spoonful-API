@@ -11,8 +11,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.get('/', requireAuth, revokeAuth, (req, res) => {
-    let cookie = req.cookies.access_token ?? 'tidak ada isinya'
-    res.json({ "data": cookie })
+    res.json({ "data": req.user })
 })
 
 app.use(userRouter)
