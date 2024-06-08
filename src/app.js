@@ -3,7 +3,7 @@ const { requireAuth, revokeAuth } = require('./middlewares/AuthMiddleware')
 
 const app = express()
 const UserRouter = require('./routes/UserRouter')
-const foodRouter = require('./routes/FoodRouter')
+const FoodRouter = require('./routes/FoodRouter')
 const MLRouter = require('./routes/MLRouter')
 const cookieParser = require('cookie-parser')
 
@@ -15,7 +15,7 @@ app.get('/', requireAuth, revokeAuth, (req, res) => {
 })
 
 app.use(UserRouter)
-app.use(foodRouter, requireAuth, revokeAuth)
+app.use(FoodRouter, requireAuth, revokeAuth)
 app.use(MLRouter, requireAuth, revokeAuth)
 
 const PORT = 3000
