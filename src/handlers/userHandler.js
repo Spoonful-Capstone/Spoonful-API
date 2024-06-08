@@ -1,57 +1,58 @@
 const { prisma } = require("../prisma")
+const bcrypt = require('bcrypt')
 
 async function registerUserHandler(req, res) {
     const { username, email, password, weight, age } = req.body
 
     if (!username || !email || !password || !weight) {
-        return res.status(400).json({ status: 'Failed', error: 'Username, email, or password is not provided' });
+        return res.status(400).json({ status: 'Failed', error: 'Username, email, password, or weight is not provided' });
     }
 
-    const user = await prisma.user.create({
-        data: {
-            email: email,
-            name: username,
-            password: password,
-            weight: weight,
-            age: age,
 
+    try {
+        const saltRounds = 10
+        const salt = await bcrypt.genSalt(saltRounds)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        const user = await prisma.user.create({
+            data: {
+                email: email,
+                name: username,
+                password: hashedPassword,
+                weight: weight,
+                age: age,
+            }
+        })
+
+        res.status(201).json({
+            status: 'Success',
+            message: 'User register successful',
+            data: user
+        });
+    } catch (error) {
+        if (error.code === 'P2002') {
+            res.status(400)
+            return res.json({
+                status: 'Failed',
+                message: 'Email has been taken, please select another email'
+            })
         }
-
-    })
-
-    res.status(200).json({
-        status: 'Success',
-        data: user
-    });
+        console.error(error.message);
+        res.status(400)
+        return res.json({
+            status: 'Failed',
+            message: 'Unknown error'
+        })
+    }
 }
 
 
 async function editUserHandler(req, res) {
-    /* const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(403).json({
-            status: 'Failed',
-            message: 'User is not authenticated'
-        });
-    }
-
-    const token = authHeader.split(' ')[1];
-    
-    try {
-        const decodedJWT = jwt.verify(token, 'your_jwt_secret_key');
-        userId = decodedJWT.id;
-        } catch (err) {
-            return res.status(403).json({
-                status: 'Failed',
-                message: 'User is not authenticated'
-                });
-                } */
-
     const { age, weight, eat_per_day, goal, food_category, nutritions } = req.body;
-    const { karbohidrat, protein, kalori } = nutritions
+    // const { carbohidrate, protein, calories } = nutritions
     const { userId } = req.params
 
-    if (!age && !weight && !eat_per_day && !goal && !food_category && (!nutritions || !karbohidrat && !protein && !kalori)) {
+    if (!age && !weight && !eat_per_day && !goal && !food_category && !nutritions) {
         return res.status(400).json({
             status: 'Failed',
             message: 'Please provide value to change'

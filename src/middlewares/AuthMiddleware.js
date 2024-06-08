@@ -28,7 +28,7 @@ function requireAuth(req, res, next) {
         }
         return next()
     } catch (err) {
-        res.clearCookies('access_token')
+        res.clearCookie('access_token')
         res.status(401)
         return res.json({
             status: 'Failed',
