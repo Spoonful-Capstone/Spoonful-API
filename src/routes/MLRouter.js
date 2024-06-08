@@ -4,6 +4,6 @@ const expressAsyncHandler = require('express-async-handler')
 
 router = express.Router()
 
-router.post('/recommend/place', (recommendPlaceHandler))
+router.post('/recommend/place', recommendPlaceHandler)
 
 module.exports = router
