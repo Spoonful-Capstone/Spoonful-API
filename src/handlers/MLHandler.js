@@ -17,9 +17,16 @@ async function recommendPlaceHandler(req, res) {
                 name: place.name,
                 address: place.formattedAddress,
                 maps_url: place.googleMapsUri,
-                photos: photoData[0].photoUri
+                photo_url: photoData[0].photoUri
             };
         }));
+        console.log(placesData);
+
+        return res.json({
+            status: 'Success',
+            message: 'Get recommendation restaurant successful',
+            data: placesData
+        })
     } catch (error) {
         res.status(404)
         return res.json({
@@ -27,26 +34,6 @@ async function recommendPlaceHandler(req, res) {
             message: 'Restaurant not found'
         })
     }
-
-    // data.forEach(async (place) => {
-    //     // const distance = 
-    //     const photoData = place.photos.length > 0 ? await getPlacesPhoto(place.photos[0].name) : 'Tidak ada isinya'
-    //     const placeData = {
-    //         name: place.displayName.text,
-    //         address: place.formattedAddress,
-    //         maps_url: place.googleMapsUri,
-    //         photos: photoData[0].photoUri,
-    //     }
-    //     places.push(placeData)
-    // })
-
-    console.log(placesData);
-
-    return res.json({
-        status: 'Success',
-        message: 'Get recommendation restaurant successful',
-        data: placesData
-    })
 }
 
 module.exports = { recommendPlaceHandler }
