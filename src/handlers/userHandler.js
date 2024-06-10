@@ -2,10 +2,10 @@ const { prisma } = require("../prisma")
 const bcrypt = require('bcrypt')
 
 async function registerUserHandler(req, res) {
-    const { username, email, password, weight, age } = req.body
+    const { username, email, password, weight, age, eatEachDay, foodCategory, goal } = req.body
 
-    if (!username || !email || !password || !weight) {
-        return res.status(400).json({ status: 'Failed', error: 'Username, email, password, or weight is not provided' });
+    if (!username || !email || !password || !weight || !age || !eatEachDay || !foodCategory || !goal) {
+        return res.status(400).json({ status: 'Failed', error: 'Please fill all of the required fields' });
     }
 
 
@@ -21,7 +21,9 @@ async function registerUserHandler(req, res) {
                 password: hashedPassword,
                 weight: weight,
                 age: age,
+                eatEachDay: eatEachDay
             }
+
         })
 
         res.status(201).json({
@@ -49,10 +51,10 @@ async function registerUserHandler(req, res) {
 
 async function editUserHandler(req, res) {
     const { age, weight, eat_per_day, goal, food_category, nutritions } = req.body;
-    // const { carbohidrate, protein, calories } = nutritions
+    const { carbohidrate, protein, calories } = nutritions
     const { userId } = req.params
 
-    if (!age && !weight && !eat_per_day && !goal && !food_category && !nutritions) {
+    if (!age && !weight && !eat_per_day && !goal && !food_category && (!nutritions || !carbohidrate && !protein && !calories)) {
         return res.status(400).json({
             status: 'Failed',
             message: 'Please provide value to change'
@@ -69,7 +71,11 @@ async function editUserHandler(req, res) {
             eat_per_day,
             goal,
             food_category,
-            nutritions
+            nutritions: {
+                carbohidrate,
+                protein,
+                calories
+            }
         }
     });
 
