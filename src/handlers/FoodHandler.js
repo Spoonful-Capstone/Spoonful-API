@@ -1,7 +1,14 @@
 const { prisma } = require("../prisma");
 
 async function getAllFoodHandler(req, res) {
-    const all_foods = await prisma.food.findMany()
+    const { category } = req.query
+    const all_foods = await prisma.food.findMany({
+        where: {
+            foodCategory: {
+                name: category
+            }
+        }
+    })
 
     if (!all_foods) {
         res.status(400)
