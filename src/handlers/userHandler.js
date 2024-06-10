@@ -2,10 +2,10 @@ const { prisma } = require("../prisma")
 const jwt = require('jsonwebtoken');
 
 async function registerUserHandler(req, res) {
-    const { username, email, password, weight, age } = req.body
+    const { username, email, password, weight, age, eatEachDay, foodCategory, goal } = req.body
 
-    if (!username || !email || !password || !weight) {
-        return res.status(400).json({ status: 'Failed', error: 'Username, email, or password is not provided' });
+    if (!username || !email || !password || !weight || !age || !eatEachDay || !foodCategory || !goal) {
+        return res.status(400).json({ status: 'Failed', error: 'Please fill all of the required fields' });
     }
 
     const user = await prisma.user.create({
@@ -15,7 +15,7 @@ async function registerUserHandler(req, res) {
             password: password,
             weight: weight,
             age: age,
-            
+            eatEachDay:eatEachDay,
         }
 
     })
@@ -49,10 +49,10 @@ async function editUserHandler(req, res) {
                 } */
 
     const { age, weight, eat_per_day, goal, food_category, nutritions } = req.body;
-    const { karbohidrat, protein, kalori } = nutritions
+    const { carbohidrate, protein, calories } = nutritions
     const { userId } = req.params
 
-    if (!age && !weight && !eat_per_day && !goal && !food_category && (!nutritions || !karbohidrat && !protein && !kalori)) {
+    if (!age && !weight && !eat_per_day && !goal && !food_category && (!nutritions || !carbohidrate && !protein && !calories)) {
         return res.status(400).json({
             status: 'Failed',
             message: 'Please provide value to change'
@@ -69,7 +69,11 @@ async function editUserHandler(req, res) {
             eat_per_day,
             goal,
             food_category,
-            nutritions
+            nutritions : {
+                carbohidrate,
+                protein,
+                calories
+            }
         }
     });
 
