@@ -1,5 +1,4 @@
 const { prisma } = require("../prisma")
-const jwt = require('jsonwebtoken');
 
 async function registerUserHandler(req, res) {
     const { username, email, password, weight, age, eatEachDay, foodCategory, goal } = req.body
@@ -60,7 +59,7 @@ async function editUserHandler(req, res) {
     }
 
 
-    
+
     const updatedUser = await prisma.user.update({
         where: { ID: userId },
         data: {
