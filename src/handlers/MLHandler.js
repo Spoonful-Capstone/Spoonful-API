@@ -20,6 +20,14 @@ async function recommendPlaceHandler(req, res) {
                 photos: photoData[0].photoUri
             };
         }));
+
+        console.log(placesData);
+        res.status(200)
+        return res.json({
+            status: 'Success',
+            message: 'Get recommendation restaurant successful',
+            data: placesData
+        })
     } catch (error) {
         res.status(404)
         return res.json({
@@ -40,13 +48,6 @@ async function recommendPlaceHandler(req, res) {
     //     places.push(placeData)
     // })
 
-    console.log(placesData);
-
-    return res.json({
-        status: 'Success',
-        message: 'Get recommendation restaurant successful',
-        data: placesData
-    })
 }
 
 module.exports = { recommendPlaceHandler }
