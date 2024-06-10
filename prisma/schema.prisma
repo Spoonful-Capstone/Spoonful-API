@@ -19,7 +19,7 @@ model user {
   email           String           @unique(map: "User_email_key")
   password        String            
   weight          Float
-  foodConsumptionCategory    food_consumption_category?   
+  food_preference    food_preference?   
   goal            Goal?          
   eatEachDay      Int               
   createdAt       DateTime         @default(now())
@@ -74,7 +74,7 @@ model food_category {
 // }
 
 
-model food_consumption_category{
+model food_preference{
   id         String        @id @default(uuid())
   name       String 
   user       user          @relation(fields: [userId], references: [ID])
