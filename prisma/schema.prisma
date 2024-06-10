@@ -17,8 +17,13 @@ model user {
   ID              String           @id @default(uuid())
   name            String
   email           String           @unique(map: "User_email_key")
-  password        String
+  password        String            
   weight          Float
+  food_preference food_preference      @relation(fields: [foodPreferenceId], references: [ID])
+  foodPreferenceId String
+  goal            Goal                 @relation(fields: [goalId], references: [ID])
+  goalId          String
+  eatEachDay      Int               
   createdAt       DateTime         @default(now())
   updatedAt       DateTime @updatedAt
   age             Int              @default(17)
@@ -41,8 +46,16 @@ model food {
   calories Float @default(0)
   carbohidrate Float @default(0)
   protein Float @default(0)
+  foodCategory   food_category  @relation(fields: [foodCategoryId], references: [ID])
+  foodCategoryId String        
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model food_category {
+  ID String @id @default(uuid())
+  name String
+  foods food[] 
 }
 
 // model nutrition{
@@ -52,15 +65,25 @@ model food {
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
 // }
-
+//
 // model food_nutrition{
 //   food food @relation(fields: [foodId], references: [ID])
 //   foodId String
 //   nutrition nutrition @relation(fields: [nutritionId], references: [ID])
 //   nutritionId String
 //   amount Float
-
 //   @@id([foodId, nutritionId])
 // }
 
 
+model food_preference{
+  ID         String        @id @default(uuid())
+  name       String 
+  users      user[]
+}
+
+model Goal{
+  ID         String  @id @default(uuid())
+  name       String    
+  users      user[]             
+}

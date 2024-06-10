@@ -2,6 +2,7 @@ const express = require('express')
 const { requireAuth, revokeAuth } = require('./middlewares/AuthMiddleware')
 
 const app = express()
+// const UserRouter = require('./routes/UserRouter')
 const UserRouter = require('./routes/UserRouter')
 const FoodRouter = require('./routes/FoodRouter')
 const MLRouter = require('./routes/MLRouter')
