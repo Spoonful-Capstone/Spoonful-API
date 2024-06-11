@@ -19,13 +19,13 @@ model user {
   email           String           @unique(map: "User_email_key")
   password        String            
   weight          Float
-  food_preference food_preference      @relation(fields: [foodPreferenceId], references: [ID])
-  foodPreferenceId String
-  goal            Goal                 @relation(fields: [goalId], references: [ID])
-  goalId          String
+  food_preference food_preference      @relation(fields: [foodPreferenceId], references: [ID], onUpdate: Cascade, onDelete: Cascade)
+  foodPreferenceId Int
+  goal            Goal                 @relation(fields: [goalId], references: [ID],onUpdate: Cascade, onDelete: Cascade)
+  goalId          Int
   eatEachDay      Int               
   createdAt       DateTime         @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime @updatedAt 
   age             Int              @default(17)
   refresh_session refresh_session?
 }
@@ -77,13 +77,13 @@ model food_category {
 
 
 model food_preference{
-  ID         String        @id @default(uuid())
+  ID         Int        @id @default(autoincrement())
   name       String 
   users      user[]
 }
 
 model Goal{
-  ID         String  @id @default(uuid())
+  ID         Int  @id @default(autoincrement())
   name       String    
   users      user[]             
 }
