@@ -1,6 +1,6 @@
 const express = require('express')
 const { loginUserHandler, logoutUserHandler, } = require('../handlers/AuthHandler')
-const { registerUserHandler, editUserHandler, getSpesificUserHandler } = require('../handlers/userHandler')
+const { registerUserHandler, editUserHandler, getSpesificUserHandler } = require('../handlers/UserHandler')
 
 router = express.Router()
 
