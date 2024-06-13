@@ -18,8 +18,8 @@ app.get('/', requireAuth, revokeAuth, (req, res) => {
 
 app.use(AuthRouter)
 app.use(UserRouter)
-app.use(FoodRouter, requireAuth, revokeAuth)
-app.use(MLRouter, requireAuth, revokeAuth)
+app.use(MLRouter)
+app.use(requireAuth, revokeAuth, FoodRouter)
 
 const PORT = 3000
 

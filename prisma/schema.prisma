@@ -41,8 +41,8 @@ model recommendation {
 model food {
   ID String @id @default(uuid())
   name String 
-  recommendation recommendation @relation(fields: [recommendationId], references: [ID])
-  recommendationId String 
+  recommendation recommendation? @relation(fields: [recommendationId], references: [ID])
+  recommendationId String? 
   calories Float @default(0)
   carbohidrate Float @default(0)
   protein Float @default(0)

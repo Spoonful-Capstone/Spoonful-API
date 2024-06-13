@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt')
 const { generateAccessToken } = require("../utils/JWTUtils")
 
 async function loginUserHandler(req, res) {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
-    if (email === null || email === '' || password === null || password === '') {
+    if (!email || email === '' || !password || password === '') {
         res.status(400)
         return res.json({
             status: 'Failed',
@@ -37,28 +37,7 @@ async function loginUserHandler(req, res) {
         })
     }
 
-    // const rf_token = await prisma.refresh_session.upsert({
-    //     update: {
-    //         user: {
-    //             connect: {
-    //                 ID: user.ID
-    //             }
-    //         }
-    //     },
-    //     create: {
-    //         user: {
-    //             connect: {
-    //                 ID: user.ID
-    //             }
-    //         }
-    //     },
-    //     where: {
-    //         userId: user.ID
-    //     }
-    // })
-
     const token = generateAccessToken(user.ID, user.email)
-    // const refresh_token = generateRefreshToken(rf_token.ID)
 
     const userData = {
         email: user.email,
@@ -69,7 +48,6 @@ async function loginUserHandler(req, res) {
 
     res.status(200)
     res.cookie('access_token', token, { maxAge: 30000 })
-    // res.cookie('refresh_token', refresh_token, { maxAge: 600000 })
     return res.json({
         status: 'Success',
         data: {
@@ -80,13 +58,6 @@ async function loginUserHandler(req, res) {
 }
 
 async function logoutUserHandler(req, res) {
-    // await prisma.refresh_session.delete({
-    //     where: {
-    //         user: {
-    //             ID: req.user.ID
-    //         }
-    //     }
-    // })
     res.clearCookie('access_token')
     return res.json({
         status: 'Success',

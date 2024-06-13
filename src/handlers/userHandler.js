@@ -1,13 +1,16 @@
 const { prisma } = require("../prisma")
+const bcrypt = require('bcrypt')
 
 async function registerUserHandler(req, res) {
     const { name, email, password, weight, age, eatEachDay, foodPreference, goal } = req.body;
 
     if (!name || !email || !password || !weight || !age || !eatEachDay || !foodPreference || !goal) {
-        return res.status(400).json({ status: 'Failed', error: 'Please fill all of the required fields' });
+        return res.status(400).json({ status: 'Failed', message: 'Please fill all of the required fields' });
     }
 
     try {
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
         const result = await prisma.$transaction(async (prisma) => {
             let food_preference = await prisma.food_preference.findFirst({
                 where: { name: foodPreference }
@@ -33,7 +36,7 @@ async function registerUserHandler(req, res) {
                 data: {
                     email,
                     name,
-                    password,
+                    password: hashedPassword,
                     weight,
                     age,
                     eatEachDay,
@@ -42,11 +45,22 @@ async function registerUserHandler(req, res) {
                 }
             });
 
-            return { user, food_preference, goalData };
+            const data = {
+                ID: user.ID,
+                email: user.email,
+                name: user.name,
+                age: user.age,
+                weight: user.weight,
+                foodPreference: food_preference.name,
+                goal: goalData.name
+            }
+
+            return data
         });
 
-        res.status(200).json({
+        res.status(201).json({
             status: 'Success',
+            message: 'User register successful',
             data: result
         });
     } catch (error) {
@@ -57,7 +71,7 @@ async function registerUserHandler(req, res) {
             });
         } else {
             console.error('Error:', error);
-            res.status(500).json({ status: 'Failed', error: 'Failed to create user' });
+            res.status(500).json({ status: 'Failed', message: 'Failed to create user' });
         }
     }
 }

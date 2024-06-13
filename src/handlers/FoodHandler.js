@@ -4,10 +4,10 @@ async function getAllFoodHandler(req, res) {
     const all_foods = await prisma.food.findMany()
 
     if (!all_foods) {
-        res.status(400)
+        res.status(500)
         return res.json({
             status: 'Failed',
-            message: 'Food data is empty'
+            message: 'Uknown error'
         })
     }
 
