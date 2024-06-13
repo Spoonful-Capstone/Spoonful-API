@@ -16,7 +16,7 @@ app.get('/', requireAuth, revokeAuth, (req, res) => {
     res.json({ "data": req.user })
 })
 
-app.user(AuthRouter)
+app.use(AuthRouter)
 app.use(UserRouter)
 app.use(FoodRouter, requireAuth, revokeAuth)
 app.use(MLRouter, requireAuth, revokeAuth)

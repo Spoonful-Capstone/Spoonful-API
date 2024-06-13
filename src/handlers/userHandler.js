@@ -66,26 +66,6 @@ async function registerUserHandler(req, res) {
 
 
 async function editUserHandler(req, res) {
-    /* const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(403).json({
-            status: 'Failed',
-            message: 'User is not authenticated'
-        });
-    }
-
-    const token = authHeader.split(' ')[1];
-    
-    try {
-        const decodedJWT = jwt.verify(token, 'your_jwt_secret_key');
-        userId = decodedJWT.id;
-        } catch (err) {
-            return res.status(403).json({
-                status: 'Failed',
-                message: 'User is not authenticated'
-                });
-                } */
-
     const { name, email, password, weight, age, eatEachDay, foodPreference, goal } = req.body;
     const { userId } = req.params
 
