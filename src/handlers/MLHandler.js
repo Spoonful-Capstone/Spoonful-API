@@ -23,6 +23,7 @@ async function recommendPlaceHandler(req, res) {
         }));
         console.log(placesData);
 
+        if (data.length === 0) throw new Error
 
         return res.json({
             status: 'Success',

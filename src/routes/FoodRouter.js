@@ -1,5 +1,6 @@
 const express = require('express')
 const { getAllFoodHandler, getFoodByIdHandler } = require('../handlers/FoodHandler')
+const { requireAuth } = require('../middlewares/AuthMiddleware')
 
 router = express.Router()
 

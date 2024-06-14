@@ -12,14 +12,10 @@ const cookieParser = require('cookie-parser')
 app.use(express.json())
 app.use(cookieParser())
 
-app.get('/', requireAuth, revokeAuth, (req, res) => {
-    res.json({ "data": req.user })
-})
-
 app.use(AuthRouter)
 app.use(UserRouter)
-app.use(MLRouter)
 app.use(requireAuth, revokeAuth, FoodRouter)
+app.use(requireAuth, revokeAuth, MLRouter)
 
 const PORT = 3000
 
