@@ -1,3 +1,5 @@
+const { prisma } = require('../prisma');
+const { generateRecommendFood } = require('../utils/GenAIUtils');
 const { findNearbyFoodByName, getPlacesPhoto, findNearbyPlace } = require('../utils/PlaceUtils')
 
 async function recommendPlaceHandler(req, res) {
@@ -40,4 +42,32 @@ async function recommendPlaceHandler(req, res) {
     }
 }
 
-module.exports = { recommendPlaceHandler }
+async function recommendFoodHandler(req, res) {
+    const { id } = req.body
+
+    const user = await prisma.user.findFirst({
+        where: {
+            ID: id
+        },
+        include: {
+            food_preference: true,
+            goal: true
+        }
+    })
+
+    const response = await generateRecommendFood({
+        age: user.age,
+        foodPreference: user.food_preference.name,
+        weight: user.weight,
+        goal: user.goal.name,
+        eatEachDay: user.eatEachDay
+    })
+
+    res.status(200)
+    return res.json({
+        status: 'Success',
+        data: response
+    })
+}
+
+module.exports = { recommendPlaceHandler, recommendFoodHandler }
